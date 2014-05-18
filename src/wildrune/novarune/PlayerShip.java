@@ -2,7 +2,6 @@ package wildrune.novarune;
 
 import wildrune.ouyaframework.graphics.SpriteBatch;
 import wildrune.ouyaframework.graphics.SpriteBatch.SpriteEffect;
-import wildrune.ouyaframework.graphics.basic.Color;
 import wildrune.ouyaframework.graphics.basic.Rectangle;
 import wildrune.ouyaframework.graphics.basic.Texture2D;
 import wildrune.ouyaframework.input.Gamepad;
@@ -24,12 +23,15 @@ public class PlayerShip
 	private float rotation;
 	
 	// constants
-	private final float engineForce = 600.0f;
+	private final float engineForce = 1000.0f;
 	private final float dragFactor = 0.9f;
 	
 	// forces
 	private Vec2 dragForce;
 	private Vec2 accumForce;
+	
+	private final float maxSpeed = 600;
+	private final float minSpeed = 5.0f;
 	
 	public PlayerShip(Texture2D texture)
 	{
@@ -47,7 +49,7 @@ public class PlayerShip
 
 	public void Update(float dt, InputSystem input)
 	{
-		Gamepad pad = input.GetGamepad(0);
+		Gamepad pad = input.GetFirstConnectedGamepad();
 		
 		// get move direction from the left stick
 		direction.x = pad.GetAxisRaw(GamepadCodes.AXIS_LS_X);
@@ -57,11 +59,11 @@ public class PlayerShip
 		if( !HandleDeadzone(direction) )
 		{
 			// simulate motor force
-			//direction.Normalize();
 			direction.Scale(engineForce);
 			accumForce.Add(direction);
 		}
 		
+		// create the drag force
 		dragForce.x = -velocity.x * dragFactor;
 		dragForce.y = -velocity.y * dragFactor;
 		
@@ -71,6 +73,19 @@ public class PlayerShip
 		velocity.Add( accumForce.Scale(dt) );
 		accumForce.x = 0.0f;
 		accumForce.y = 0.0f;
+		
+		// limit the speed
+		float veLength = velocity.Length();
+		if(veLength > maxSpeed)
+		{
+			velocity.Normalize();
+			velocity.Scale(maxSpeed);
+		}
+		else if ( veLength < minSpeed )
+		{
+			velocity.x = 0.0f;
+			velocity.y = 0.0f;
+		}
 
 		// integrate position
 		position.Add(velocity.x * dt, velocity.y * dt);

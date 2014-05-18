@@ -1,12 +1,9 @@
 package wildrune.novarune;
 
 import wildrune.ouyaframework.OuyaGameActivity;
-import wildrune.ouyaframework.audio.Music;
 import wildrune.ouyaframework.game.screens.GameScreen;
 import wildrune.ouyaframework.graphics.basic.Color;
 import wildrune.ouyaframework.graphics.basic.SpriteFont;
-import wildrune.ouyaframework.input.Gamepad;
-import wildrune.ouyaframework.input.GamepadCodes;
 import wildrune.ouyaframework.input.InputSystem;
 import wildrune.ouyaframework.math.RuneMath;
 import wildrune.ouyaframework.math.Vec2;
@@ -88,9 +85,7 @@ public class MainBackgroundScreen extends GameScreen
 	 */
 	@Override
 	public void Draw(float dt) 
-	{
-		OuyaGameActivity game = screenManager.game;
-		
+	{	
 		// draw title text
 		screenManager.spriteBatch.Begin();
 		screenManager.spriteBatch.DrawText(titleFont, gameName, titlePosition, Color.ORANGE);
