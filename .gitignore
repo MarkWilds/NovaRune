@@ -8,7 +8,5 @@
 *.jar
 *.war
 *.ear
-/res/
 /gen/
-/assets/
 NovaRune.iml
